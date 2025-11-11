@@ -1,5 +1,7 @@
 package com.feteforraine;
 
+import java.util.Objects; // pour equals()
+
 public class Autotamponneuses {
     private final int id;
     private static int last_id=0;
@@ -9,6 +11,7 @@ public class Autotamponneuses {
     private String nomOccupant;
     private boolean allumee;
     private boolean clignotante;
+    private static final int DISTANCE_MINIMAL=1;
 
     public Autotamponneuses() {
 
@@ -52,7 +55,11 @@ public class Autotamponneuses {
     }
 
     @Override public String toString() {
-        return "[" + id + "] (" + x + "," + y + ")" + (estOccupee() ? " occupée " + "(" + nomOccupant + ") " : " libre") + (estAllumee() ? " allumée" : " éteinte") + (estClignotante() ? " clignotante" : " non clignotante");
+        return "[" + this.id + "] ("
+                + this.x + "," + this.y + ")"
+                + (this.estOccupee() ? " occupée " + "(" + this.nomOccupant + ") " : " libre")
+                + (this.estAllumee() ? " allumée" : " éteinte")
+                + (this.estClignotante() ? " clignotante" : " non clignotante");
     }
 
     boolean place(float coordX, float coordY) {
@@ -100,6 +107,35 @@ public class Autotamponneuses {
         return true;
     }
 
+    // Collision en méthode d'instance
+    public double calculeDistance(Autotamponneuses autreAuto) {
+        return Math.sqrt(Math.pow(this.x-autreAuto.x, 2) + Math.pow(this.y-autreAuto.y, 2)); // Ajout du this. par soucis de clareté
+    }
+    public boolean collision(Autotamponneuses autreAuto) {
+        return calculeDistance(autreAuto) < DISTANCE_MINIMAL;
+    }
+
+    // Collision en méthode de classe
+    public static double calculeDistance(Autotamponneuses auto1, Autotamponneuses auto2) {
+        if (auto1 == null || auto2 == null) {
+            return Double.NaN;
+        }
+        return Math.sqrt(Math.pow(auto1.x-auto2.x, 2) + Math.pow(auto1.y-auto2.y, 2));
+    }
+    public static boolean collision(Autotamponneuses auto1, Autotamponneuses auto2) {
+        if (auto1 == null || auto2 == null) {
+            return false;
+        }
+        return calculeDistance(auto1, auto2) < DISTANCE_MINIMAL;
+    }
+
+    @Override public boolean equals(Object autreObjet) {
+        if (this == autreObjet) return true;
+        if (autreObjet == null || getClass() != autreObjet.getClass()) return false;
+        Autotamponneuses autreAuto = (Autotamponneuses) autreObjet; // On transtype vers Autotamponneuses
+        return this.id == autreAuto.id;
+    }
+
     public static void main(String[] args) {
         // TEST CONSTRUCTEURS
         Autotamponneuses constructeur1 = new Autotamponneuses();
@@ -107,9 +143,9 @@ public class Autotamponneuses {
         Autotamponneuses constructeur2 = new Autotamponneuses(5.0f,6.2f);
         System.out.println("TEST CONSTRUCTEUR : " + (constructeur2.x == 5.0f && constructeur2.y == 6.2f ? "OK" : "FAIL"));
 
-        // TEST METHODES 1
+        // TEST GETTERS
         System.out.println("TEST estOccupee : " + (constructeur1.estOccupee() ? "FAIL" : "OK"));
-        System.out.println("TEST getNomOccupant : " + (constructeur1.getNomOccupant()=="" ? "OK" : "FAIL"));
+        System.out.println("TEST getNomOccupant : " + (Objects.equals(constructeur1.getNomOccupant(),"") ? "OK" : "FAIL"));
         System.out.println("TEST estAllumee : " + (constructeur1.estAllumee() ? "FAIL" : "OK"));
         System.out.println("TEST estClignotante : " + (constructeur1.estClignotante() ? "FAIL" : "OK"));
 
@@ -117,8 +153,8 @@ public class Autotamponneuses {
         System.out.println("TEST id : " + (constructeur1.id == last_id+1 ? "OK" : "FAIL"));
 
         // TEST toString
-        System.out.println(constructeur1.toString());
-        //System.out.println("TEST toString : " + (constructeur1.toString() == "[1] (-1.0,-1.0) libre éteinte non clignotante" ? "OK" : "FAIL"));
+        //System.out.println(constructeur1.toString()); // Test manuel
+        System.out.println("TEST toString : " + (Objects.equals(constructeur1.toString(),"[1] (-1.0,-1.0) libre éteinte non clignotante") ? "OK" : "FAIL"));
 
         // TEST METHODES 2
         System.out.println("TEST place 1 : " + (constructeur1.place(-1.0f, -1.0f) ? "FAIL" : "OK"));
