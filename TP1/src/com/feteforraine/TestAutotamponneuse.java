@@ -48,7 +48,8 @@ public class TestAutotamponneuse {
     public static void testEquals() {
         Autotamponneuses a = new Autotamponneuses();
         Autotamponneuses b = new Autotamponneuses();
-        System.out.println("TEST equals (Instance) : " + (a.equals(b) ? "OK" : "FAIL"));
+        System.out.println("TEST equals (Instance) 1 : " + (a.equals(a) ? "OK" : "FAIL"));
+        System.out.println("TEST equals (Instance) 2 : " + (a.equals(b) ? "FAIL" : "OK"));
     }
 
     public static void main(String[] args) {
