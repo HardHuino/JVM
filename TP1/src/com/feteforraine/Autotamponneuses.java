@@ -29,7 +29,7 @@ public class Autotamponneuses {
     }
 
     public Autotamponneuses(float coordX, float coordY) {
-        id = last_id+1;
+        id = last_id++;
         x = coordX;
         y = coordY;
         occupee = false;
@@ -109,10 +109,16 @@ public class Autotamponneuses {
 
     // Collision en méthode d'instance
     public double calculeDistance(Autotamponneuses autreAuto) {
+        if (autreAuto==null) {
+            return -1.0;
+        }
         return Math.sqrt(Math.pow(this.x-autreAuto.x, 2) + Math.pow(this.y-autreAuto.y, 2)); // Ajout du this. par soucis de clareté
     }
     public boolean collision(Autotamponneuses autreAuto) {
-        return calculeDistance(autreAuto) < DISTANCE_MINIMAL;
+        if (autreAuto==null) {
+            return false;
+        }
+        return this.calculeDistance(autreAuto) < DISTANCE_MINIMAL;
     }
 
     // Collision en méthode de classe
@@ -133,7 +139,7 @@ public class Autotamponneuses {
         if (this == autreObjet) return true;
         if (autreObjet == null || getClass() != autreObjet.getClass()) return false;
         Autotamponneuses autreAuto = (Autotamponneuses) autreObjet; // On transtype vers Autotamponneuses
-        return this.id == autreAuto.id;
+        return this.id == autreAuto.id; // On considerera egale toute autotamponneuses ayant le même ID
     }
 
     public static void main(String[] args) {
