@@ -45,8 +45,9 @@ public class tabUtil {
     }
 
     public static void minToMax(int[] tabMin, int[] tabMax) { // Echange min de tabMin avec max de tabMax
+        int minimum = min(tabMin);
         for (int i=0; i<tabMin.length; i++) {
-            if (tabMin[i]==min(tabMin)) tabMin[i]=max(tabMax); // Complexité médiocre
+            if (tabMin[i]==minimum) tabMin[i]=max(tabMax);
         }
     }
 
