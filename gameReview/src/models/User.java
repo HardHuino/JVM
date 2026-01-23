@@ -1,13 +1,16 @@
-package model;
+package models;
 
 public abstract class User {
+    // Générateur d'ID unique pour tous les utilisateurs
+    private static int nextId = 1;
+
     // Attributs
-    protected String id;
+    protected int id;
     protected UserType type;
 
     // Constructeur
-    public User(String id, UserType type) {
-        this.id = id;
+    protected User(UserType type) {
+        this.id = nextId++;
         this.type = type;
     }
 
@@ -16,7 +19,9 @@ public abstract class User {
     public abstract boolean canViewReviews();
     public abstract boolean canWriteReview(Game game, Support support);
     public abstract boolean canWriteTest(Game game, Support support);
-    public String getId() {
+
+    // Getters
+    public int getId() {
         return id;
     }
     public UserType getType() {

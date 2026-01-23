@@ -1,14 +1,16 @@
-package model;
+package models;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class Support extends Game {
+public class Support {
     // Attributs
+    private Game game;              // Référence vers le jeu
     private String platform;
+
     private int releaseYear;
     private String developer;
     private double globalSales;
+
     private int criticCount;
     private double criticScore;
     private int userCount;
@@ -20,7 +22,12 @@ public class Support extends Game {
     private int tokensPlaced;
 
     // Constructeur
-    public Support(String platform, int releaseYear, String developer, double globalSales, int criticCount, double criticScore, int userCount, double userScore) {
+    public Support(Game game, String platform, int releaseYear,
+                   String developer, double globalSales,
+                   int criticCount, double criticScore,
+                   int userCount, double userScore) {
+
+        this.game = game;
         this.platform = platform;
         this.releaseYear = releaseYear;
         this.developer = developer;
@@ -29,6 +36,11 @@ public class Support extends Game {
         this.criticScore = criticScore;
         this.userCount = userCount;
         this.userScore = userScore;
+
+        this.reviews = new ArrayList<>();
+        this.tokensPlaced = 0;
+
+        game.addSupport(this);
     }
 
     // Méthodes de gestion des reviews
@@ -41,9 +53,15 @@ public class Support extends Game {
     public List<Review> getReviews() {
         return reviews;
     }
-    public List<Review> getSortedReviews();
-    public double getAverageReviewScore();
-    public int getReviewCount(Support support) {
+    //public List<Review> getSortedReviews();
+    public double getAverageReviewScore() {
+        double total = 0;
+        for (Review review : reviews) {
+            total += review.getScore();
+        }
+        return total / reviews.size();
+    }
+    public int getReviewCount() {
         return reviews.size();
     }
 
@@ -63,6 +81,8 @@ public class Support extends Game {
 
     // Méthodes de gestion des tests
     public void setTest(Test test) {
+        if (hasTest())
+            throw new IllegalStateException("Un test existe déjà pour ce support");
         this.test = test;
     }
     public Test getTest() {
@@ -73,6 +93,9 @@ public class Support extends Game {
     }
 
     // Getters
+    public Game getGame() {
+        return game;
+    }
     public String getPlatform() {
         return platform;
     }
